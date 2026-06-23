@@ -1,0 +1,38 @@
+<template>
+  <div
+    class="rounded-lg border-1"
+    :class="
+      status ? 'bg-success/5 border-success/30' : 'bg-error/5 border-error/30'
+    "
+  >
+    <div class="flex items-center gap-3 px-5 py-4">
+      <div
+        class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+        :class="status ? 'bg-success' : 'bg-error'"
+      >
+        <UIcon
+          size="20"
+          :name="status ? 'i-lucide-check-circle' : 'i-lucide-x-circle'"
+          class="text-white"
+        />
+      </div>
+      <div class="flex-1">
+        <p class="text-xs text-gray-500 dark:text-gray-400">
+          {{ $t("status") }}
+        </p>
+        <span
+          class="text-lg font-bold"
+          :class="status ? 'text-success' : 'text-error'"
+        >
+          {{ status ? $t("active") : $t("inactive") }}
+        </span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+defineProps<{
+  status: boolean;
+}>();
+</script>
