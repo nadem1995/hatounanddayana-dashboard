@@ -58,7 +58,7 @@
             </UInput>
           </UFormField>
 
-        
+
           <!-- Submit Button -->
           <UButton
             type="submit"
@@ -72,11 +72,6 @@
             {{ isLoading ? t("loggingIn") : t("login") }}
           </UButton>
         </UForm>
-
-        <!-- Color Mode Toggle -->
-        <div class="flex justify-center pt-4">
-          <UColorModeButton />
-        </div>
       </div>
     </div>
 
@@ -86,7 +81,7 @@
       <div class="text-center space-y-6">
         <div class="text-6xl">🏠</div>
         <h1 class="text-4xl font-bold text-primary-600 dark:text-primary-400">
-          Maison de Dina
+          {{$t('appName')}}
         </h1>
         <p class="text-xl text-gray-600 dark:text-gray-400 max-w-md">
           {{ t("manageBusiness") }}

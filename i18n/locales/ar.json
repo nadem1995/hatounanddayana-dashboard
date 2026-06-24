@@ -1,4 +1,5 @@
 {
+  "appName": "Hatoun and Dayana",
   "logout": "تسجيل الخروج",
   "login": "تسجيل الدخول",
   "welcome": "مرحباً",
@@ -244,5 +245,13 @@
   "contactInfo":"معلومات التواصل",
   "phone":"رقم الهاتف",
   "address":"العنوان",
-  "whatsappNumber":"رقم الواتس أب"
+  "whatsappNumber":"رقم الواتس أب",
+  "recommendedSize": "الحجم الموصى به",
+  "currentImage": "الصورة الحالية",
+  "preview": "معاينة",
+  "notSavedYet": "لم يتم الحفظ بعد",
+  "dimensionWarning": "أبعاد الصورة لا تتطابق مع الحجم الموصى به",
+  "uploadedSize": "حجم الصورة المرفوعة",
+  "dropImageHere": "أسقط صورتك هنا",
+  "errorLoadingImage": "فشل تحميل الصورة"
 }

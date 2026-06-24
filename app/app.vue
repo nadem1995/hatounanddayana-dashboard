@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import * as locales from '@nuxt/ui/locale'
 
-const { locale } = useI18n()
+const { locale,t } = useI18n()
 const lang = computed(() => locales[locale.value].code)
 const dir = computed(() => locales[locale.value].dir)
 const colorMode = useColorMode()
@@ -33,16 +33,14 @@ useHead({
   }
 })
 
-const title = 'Maison de dina'
-const description = 'Maison de dina'
+const title = computed(() => t('appName'))
+const description = computed(() => t('appDescription'))
 
 useSeoMeta({
   title,
   description,
   ogTitle: title,
   ogDescription: description,
-  /* ogImage: 'https://ui.nuxt.com/assets/templates/nuxt/dashboard-light.png',
-  twitterImage: 'https://ui.nuxt.com/assets/templates/nuxt/dashboard-light.png', */
   twitterCard: 'summary_large_image'
 })
 </script>
