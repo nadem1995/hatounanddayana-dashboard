@@ -11,23 +11,20 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div class="col-span-2 space-y-4">
             <UFormField
-              :error="serverError?.name?.[0]"
+              :error="serverError?.name_en?.[0]"
+              required
+              :label="$t('name') + ' EN'"
+              name="name_en"
+            >
+              <UInput v-model="state.name_en" class="w-full" />
+            </UFormField>
+            <UFormField
+              :error="serverError?.name_ar?.[0]"
               required
               :label="$t('name')"
-              name="name"
+              name="name_ar"
             >
-              <UInput v-model="state.name" class="w-full" />
-            </UFormField>
-
-
-
-             <UFormField
-              :error="serverError?.description?.[0]"
-              required
-              :label="$t('description ')"
-              name="description "
-            >
-              <UInput v-model="state.description" class="w-full" />
+              <UInput v-model="state.name_ar" class="w-full" />
             </UFormField>
           </div>
 
@@ -142,8 +139,8 @@ const props = defineProps<{
 }>();
 
 const schema = z.object({
-  name: z.string().min(2, t("fieldRequired")),
-  description: z.string().optional(),
+  name_en: z.string().min(2, t("fieldRequired")),
+  name_ar: z.string().min(2, t("fieldRequired")),
   image: z.any().optional(), // Make optional since we have existing image
   status: z.boolean().default(true),
 });
@@ -152,8 +149,8 @@ type Schema = z.output<typeof schema>;
 const isLoading = ref(false);
 
 const state = ref<Schema>({
-  name: props.category.name,
-  description: props.category.description || "",
+  name_en: props.category.name.en,
+  name_ar: props.category.name.ar,
   image: undefined,
   status: props.category.status,
 });
@@ -177,9 +174,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
     const formData = new FormData();
     formData.append("_method", "PUT");
-    formData.append("name", state.value.name);
-    formData.append("description ", state.value.description?? '' );
-
+    formData.append("name_en", state.value.name_en);
+    formData.append("name_ar", state.value.name_ar);
 
     // Only append image if user uploaded a new one
     if (state.value.image instanceof File) {

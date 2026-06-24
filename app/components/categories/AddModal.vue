@@ -16,24 +16,22 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div class="col-span-2 space-y-4">
             <UFormField
-              :error="serverError?.name?.[0]"
+              :error="serverError?.name_en?.[0]"
+              required
+              :label="$t('name') + ' EN'"
+              name="name_en"
+            >
+              <UInput v-model="state.name_en" class="w-full" />
+            </UFormField>
+            <UFormField
+              :error="serverError?.name_ar?.[0]"
               required
               :label="$t('name')"
-              name="name"
+              name="name_ar"
             >
-              <UInput v-model="state.name" class="w-full" />
+              <UInput v-model="state.name_ar" class="w-full" />
             </UFormField>
 
-
-
-            <UFormField
-              :error="serverError?.description?.[0]"
-              required
-              :label="$t('description')"
-              name="description"
-            >
-              <UInput v-model="state.description" class="w-full" />
-            </UFormField>
           </div>
           <div class="col-span-1">
             <UFormField
@@ -95,7 +93,8 @@ const props = defineProps<{
 }>();
 
 const schema = z.object({
-  name: z.string().min(2, $t("fieldRequired")),
+  name_en: z.string().min(2, $t("fieldRequired")),
+  name_ar: z.string().min(2, $t("fieldRequired")),
   image: z.any().refine((file) => file instanceof File, t("fieldRequired")),
   status: z.boolean().default(true),
 });
@@ -104,8 +103,8 @@ const open = ref(false);
 type Schema = z.output<typeof schema>;
 
 const state = ref({
-  name: "",
-  description:"",
+  name_en: "",
+  name_ar:"",
   image: undefined,
   status: true,
 });
@@ -118,8 +117,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   isLoading.value = true;
   try {
     const formData = new FormData();
-    formData.append("name", state.value.name);
-     formData.append("description", state.value.description);
+    formData.append("name_ar", state.value.name_ar);
+    formData.append("name_en", state.value.name_en);
     if (state.value.image) {
       formData.append("image", state.value.image);
     }
@@ -138,8 +137,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     });
 
     state.value = {
-      name: "",
-      description:"",
+      name_en: "",
+      name_ar: "",
       image: undefined,
       status: true,
     };

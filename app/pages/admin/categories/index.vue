@@ -137,22 +137,22 @@ const UDropdownMenu = resolveComponent("UDropdownMenu");
 
 const columns = [
   {
-    id: "category",
-    accessorKey: "name",
+    id: "category_name_ar",
+    accessorKey: "name_ar",
     header: () => t("name"),
     cell: ({ row }) => {
       return h("div", { class: "flex flex-col gap-1 py-1" }, [
-        h("p", { class: "font-semibold text-highlighted" }, row.original.name),
+        h("p", { class: "font-semibold text-highlighted" }, row.original.name.ar),
       ]);
     },
   },
   {
-    id: "description",
-    accessorKey: "description",
-    header: () => t("description"),
+    id: "category_name_en",
+    accessorKey: "name_en",
+    header: () => t("name") + " EN",
     cell: ({ row }) => {
       return h("div", { class: "flex flex-col gap-1 py-1" }, [
-        h("p", { class: "font-semibold text-highlighted" }, row.original.description),
+        h("p", { class: "font-semibold text-highlighted" }, row.original.name.en),
       ]);
     },
   },
