@@ -1,6 +1,6 @@
 <template>
   <UDashboardGroup unit="rem">
-    
+
     <UDashboardSidebar
       id="default"
       collapsible
@@ -91,7 +91,7 @@ const links = [
             open.value = false;
           },
         },
-        
+
       ],
     },
     {
