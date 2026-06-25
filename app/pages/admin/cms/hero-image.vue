@@ -1,245 +1,155 @@
 <template>
-  <UDashboardPanel id="hero-slider" :ui="{ body: 'lg:py-12' }">
+  <UDashboardPanel id="hero-slider">
     <template #header>
       <UDashboardNavbar :title="$t('heroImage')">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
         <template #right>
-          <div class="flex items-center gap-2">
-            <UButton
-              v-if="heroImage?.url && !fileValue"
-              color="error"
-              variant="soft"
-              icon="i-lucide-trash-2"
-              :loading="isDeleting"
-              @click="deleteImage"
-            >
-              {{ $t('delete') }}
-            </UButton>
-            <UButton
-              v-if="fileValue"
-              color="neutral"
-              variant="outline"
-              icon="i-lucide-x"
-              :disabled="isSaving"
-              @click="cancelSelection"
-            >
-              {{ $t('cancel') }}
-            </UButton>
-            <UButton
-              color="primary"
-              icon="i-lucide-save"
-              :loading="isSaving"
-              :disabled="!fileValue"
-              @click="saveImage"
-            >
-              {{ $t('save') }}
-            </UButton>
-          </div>
+          <UButton
+            color="primary"
+            icon="i-lucide-save"
+            :loading="isSaving"
+            :disabled="!isFile(state.image)"
+            @click="saveImage"
+          >
+            {{ $t('save') }}
+          </UButton>
         </template>
       </UDashboardNavbar>
     </template>
 
     <template #body>
-      <div class="max-w-4xl mx-auto space-y-6">
+        <UFileUpload
+          v-slot="{ open, removeFile }"
+          v-model="state.image"
+          accept="image/*"
+        >
+            <div class="relative rounded-xl max-w-[500px] overflow-hidden ">
 
-        <!-- Dimension info badge -->
-        <div class="flex items-center gap-2 text-sm text-muted">
-          <UIcon name="i-lucide-info" class="size-4 shrink-0" />
-          <span>{{ $t('recommendedSize') }}: <strong>1200 × 570 px</strong></span>
-        </div>
-
-        <!-- Current Image Preview -->
-        <UCard v-if="heroImage?.url && !fileValue">
-          <template #header>
-            <div class="flex items-center justify-between">
-              <p class="font-semibold text-highlighted">{{ $t('currentImage') }}</p>
-              <UButton
-                size="sm"
-                variant="soft"
-                icon="i-lucide-pencil"
-                @click="editMode = true"
-              >
-                {{ $t('changeImage') }}
-              </UButton>
-            </div>
-          </template>
-
-          <div class="relative w-full overflow-hidden rounded-lg bg-muted/30">
-            <div class="w-full" style="aspect-ratio: 1200 / 570">
+              <!-- New file -->
               <img
-                :src="heroImage.url"
-                alt="Hero Image"
+                v-if="isFile(state.image)"
+                :src="previewUrl"
+                class="w-full h-auto object-cover"
+              />
+
+              <!-- Server image -->
+              <NuxtImg
+                v-else-if="heroImage?.data?.image"
+                :src="heroImage.data.image"
                 class="w-full h-full object-cover"
               />
-            </div>
-          </div>
 
-          <!-- Image meta -->
-          <template #footer>
-            <div class="flex items-center gap-4 text-sm text-muted">
-              <span class="flex items-center gap-1">
-                <UIcon name="i-lucide-image" class="size-4" />
-                {{ heroImage.filename ?? $t('heroImage') }}
-              </span>
-            </div>
-          </template>
-        </UCard>
-
-        <!-- File Upload (shown when no image exists OR edit mode is on) -->
-        <UCard v-if="!heroImage?.url || editMode">
-          <template #header>
-            <p class="font-semibold text-highlighted">
-              {{ heroImage?.url ? $t('changeImage') : $t('uploadImage') }}
-            </p>
-          </template>
-
-          <!-- New Image Preview -->
-          <div v-if="previewUrl" class="mb-5">
-            <div class="flex items-center justify-between mb-2">
-              <p class="text-sm font-medium text-muted">{{ $t('preview') }}</p>
-              <UBadge color="warning" variant="soft">{{ $t('notSavedYet') }}</UBadge>
-            </div>
-            <div class="relative w-full overflow-hidden rounded-lg border border-default">
-              <div class="w-full" style="aspect-ratio: 1200 / 570">
-                <img
-                  :src="previewUrl"
-                  alt="Preview"
-                  class="w-full h-full object-cover"
+              <!-- Empty -->
+              <div
+                v-else
+                class="flex h-full items-center justify-center"
+              >
+                <UIcon name="i-lucide-image" class="size-16 text-muted/30" />
+              </div>
+              <!-- Dark gradient overlay -->
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <!-- Top-right action buttons -->
+              <div class="absolute top-3 right-3 flex gap-2">
+                <UButton
+                  icon="i-lucide-pencil"
+                  size="xs"
+                  color="neutral"
+                  variant="solid"
+                  class="backdrop-blur-sm bg-white/20 hover:bg-white/30 text-white border-0"
+                  @click="open()"
+                />
+                <UButton
+                  v-if="isFile(state.image)"
+                  icon="i-lucide-x"
+                  size="xs"
+                  color="error"
+                  variant="solid"
+                  class="backdrop-blur-sm"
+                  @click.stop="removeFile()"
                 />
               </div>
             </div>
-
-            <!-- Dimension warning -->
-            <div v-if="dimensionWarning" class="mt-3">
-              <UAlert
-                color="warning"
-                variant="soft"
-                icon="i-lucide-triangle-alert"
-                :title="$t('dimensionWarning')"
-                :description="`${$t('uploadedSize')}: ${imageDimensions.width} × ${imageDimensions.height}px — ${$t('recommendedSize')}: 1200 × 570px`"
-              />
-            </div>
-          </div>
-
-          <UFileUpload
-            v-model="fileValue"
-            accept="image/*"
-            icon="i-lucide-image"
-            :label="$t('dropImageHere')"
-            description="PNG, JPG, WEBP (recommended: 1200 × 570 px)"
-            class="w-full"
-            :ui="{ base: 'min-h-48' }"
-          />
-        </UCard>
-
-        <!-- API error -->
-        <UAlert
-          v-if="error"
-          color="error"
-          variant="soft"
-          icon="i-lucide-circle-x"
-          :title="$t('errorLoadingImage')"
-          :description="error.message"
-        />
-
-      </div>
+        </UFileUpload>
     </template>
   </UDashboardPanel>
 </template>
 
 <script setup>
-const { t } = useI18n();
+const { t } = useI18n()
+const toast = useToast()
 
-useHead({
-  title: () => t('heroImage'),
-});
+useHead({ title: () => t('heroImage') })
 
-const RESOURCE_PATH = 'cms/hero-image';
+const RESOURCE_PATH = 'cms/hero-image'
+const isSaving = ref(false)
 
-// ── State ────────────────────────────────────────────────
-const fileValue = ref(null);
-const previewUrl = ref(null);
-const isSaving = ref(false);
-const isDeleting = ref(false);
-const editMode = ref(false);
-const imageDimensions = ref({ width: 0, height: 0 });
+const { data: heroImage, refresh: refreshHeroImage } = await useApiFetch(RESOURCE_PATH, { lazy: true })
 
-// ── Computed ─────────────────────────────────────────────
-const dimensionWarning = computed(() =>
-  imageDimensions.value.width > 0 &&
-  (imageDimensions.value.width !== 1200 || imageDimensions.value.height !== 570)
-);
+const state = ref({ image: null })
 
-// ── Data fetching ─────────────────────────────────────────
-const {
-  data: heroImage,
-  error,
-  refresh,
-} = await useApiFetch(RESOURCE_PATH, { lazy: true });
+// SSR-safe File check
+function isFile(value) {
+  return typeof File !== 'undefined' && value instanceof File
+}
 
-// ── Watch fileValue (File | null from UFileUpload v-model) ─
-watch(fileValue, (file) => {
-  if (!file) {
-    previewUrl.value = null;
-    imageDimensions.value = { width: 0, height: 0 };
-    return;
-  }
+// Reactive object URL
+const previewUrl = computed(() => {
+  return isFile(state.value.image)
+    ? URL.createObjectURL(state.value.image)
+    : null
+})
 
-  // Generate preview URL
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    previewUrl.value = e.target.result;
+// Revoke old object URL when file changes
+watch(previewUrl, (newUrl, oldUrl) => {
+  if (oldUrl) URL.revokeObjectURL(oldUrl)
+})
 
-    // Check actual dimensions
-    const img = new Image();
-    img.onload = () => {
-      imageDimensions.value = { width: img.width, height: img.height };
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file); // file is guaranteed to be a File/Blob
-});
+onUnmounted(() => {
+  if (previewUrl.value) URL.revokeObjectURL(previewUrl.value)
+})
 
-// ── Actions ───────────────────────────────────────────────
-function cancelSelection() {
-  fileValue.value = null;
-  previewUrl.value = null;
-  imageDimensions.value = { width: 0, height: 0 };
-  editMode.value = false;
+function formatFileSize(bytes) {
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
 async function saveImage() {
-  if (!fileValue.value) return;
-  isSaving.value = true;
-  try {
-    const formData = new FormData();
-    formData.append('image', fileValue.value);
+  if (!isFile(state.value.image)) return
 
-    await useApiFetchRaw(RESOURCE_PATH, {
+  isSaving.value = true   // ✅ start loading
+  try {
+    const formData = new FormData()
+    formData.append('_method', 'PUT')
+    formData.append('image', state.value.image)
+
+    const response = await useApiFetchRaw(RESOURCE_PATH, {
       method: 'POST',
       body: formData,
-    });
+    })
 
-    cancelSelection();
-    await refresh();
-  } catch (err) {
-    console.error(err);
-  } finally {
-    isSaving.value = false;
-  }
-}
+    // ✅ Reset file + refresh server image
+    state.value.image = null
+    await refreshHeroImage()
 
-async function deleteImage() {
-  isDeleting.value = true;
-  try {
-    await useApiFetchRaw(RESOURCE_PATH, { method: 'DELETE' });
-    await refresh();
-  } catch (err) {
-    console.error(err);
+    toast.add({
+      title: response?.message ?? t('savedSuccessfully'),
+      color: 'success',
+      icon: 'i-lucide-check-circle',
+    })
+  } catch (error) {
+    const is422 = error?.status === 422
+    toast.add({
+      title: is422
+        ? Object.values(error.data?.errors ?? {}).flat().join(', ')
+        : t('errorOccurred'),
+      color: 'error',
+      icon: 'i-lucide-alert-circle',
+    })
   } finally {
-    isDeleting.value = false;
+    isSaving.value = false  // ✅ always stop loading
   }
 }
 </script>
