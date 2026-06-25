@@ -14,26 +14,37 @@
         @submit="onSubmit"
       >
         <div class="space-y-4">
-          <!-- Name -->
-          <UFormField required :label="$t('question')" name="question">
+          <UFormField required :label="$t('question') + ' EN'" name="question_en">
             <UInput
-              v-model="state.question"
+              v-model="state.question_en"
               class="w-full"
             />
           </UFormField>
 
-          <!-- Source -->
-          <UFormField required :label="$t('answer')" name="answer">
+          <UFormField required :label="$t('question')" name="question_ar">
+            <UInput
+              v-model="state.question_ar"
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField required :label="$t('answer') +' EN'" name="answer_en">
             <UTextarea
-              v-model="state.answer"
+              v-model="state.answer_en"
               class="w-full"
               autoresize
               :rows="3"
             />
           </UFormField>
 
-
-          
+          <UFormField required :label="$t('answer')" name="answer_ar">
+            <UTextarea
+              v-model="state.answer_ar"
+              class="w-full"
+              autoresize
+              :rows="3"
+            />
+          </UFormField>
         </div>
 
         <USeparator color="primary" type="solid" />
@@ -72,16 +83,21 @@ const props = defineProps<{
 }>();
 
 const schema = z.object({
-  question: z.string().min(2, t("fieldRequired")),
-  answer: z.string().min(2, t("fieldRequired")),
+  question_ar: z.string().min(2, t("fieldRequired")),
+  answer_ar: z.string().min(2, t("fieldRequired")),
+
+  question_en: z.string().min(2, t("fieldRequired")),
+  answer_en: z.string().min(2, t("fieldRequired")),
 });
 const open = ref(false);
 
 type Schema = z.output<typeof schema>;
 
 const state = ref({
-  question: '',
-  answer: '',
+  question_en: '',
+  answer_en: '',
+  question_ar: '',
+  answer_ar: '',
 });
 
 const serverError = ref<any | null>(null);
@@ -105,8 +121,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     });
 
     state.value = {
-      question: '',
-      answer: '',
+      question_en: '',
+      answer_en: '',
+      question_ar: '',
+      answer_ar: '',
     };
   } catch (error: any) {
     if (error.status === 422) {

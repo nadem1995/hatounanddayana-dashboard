@@ -58,20 +58,36 @@ const editFAQModel = overlay.create(LazyFAQEditModal);
 
 const columns = [
   {
-    id: "question",
-    accessorKey: "question",
-    header: () => t("question"),
+    id: "question_en",
+    accessorKey: "question_en",
+    header: () => t("question") + ' EN',
     cell: ({ row }) =>
-      h("p", { class: "font-semibold text-highlighted" }, row.original.question),
+      h("p", { class: "font-semibold text-highlighted" }, row.original.question.en),
   },
   {
-    id: "answer",
-    accessorKey: "answer",
+    id: "answer_en",
+    accessorKey: "answer_en",
+    header: () => t("answer") + ' EN',
+    cell: ({ row }) =>
+      h("p", { class: "font-semibold text-highlighted" }, row.original.answer.en),
+  },
+
+
+  {
+    id: "question_ar",
+    accessorKey: "question_ar",
+    header: () => t("question"),
+    cell: ({ row }) =>
+      h("p", { class: "font-semibold text-highlighted" }, row.original.question.ar),
+  },
+  {
+    id: "answer_ar",
+    accessorKey: "answer_ar",
     header: () => t("answer"),
     cell: ({ row }) =>
-      h("p", { class: "font-semibold text-highlighted" }, row.original.answer),
+      h("p", { class: "font-semibold text-highlighted" }, row.original.answer.ar),
   },
-  
+
   {
     id: "actions",
     accessorKey: "actions",

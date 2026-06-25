@@ -1,6 +1,6 @@
 <template>
   <UModal v-model:open="open" :title="$t('editFAQ')">
-    
+
     <template #body>
       <UForm
         :disabled="isLoading"
@@ -10,12 +10,31 @@
         @submit="onSubmit"
       >
         <div class="space-y-4">
-          <!-- Name -->
-          <UFormField required :label="$t('question')" name="question">
-            <UInput v-model="state.question" class="w-full" />
+          <UFormField required :label="$t('question') + ' EN'" name="question_en">
+            <UInput v-model="state.question_en" class="w-full" />
           </UFormField>
 
-          <!-- Message (full width) -->
+
+          <UFormField
+            required
+            :label="$t('answer') + ' EN'"
+            name="answer_en"
+            class="md:col-span-3"
+          >
+            <UTextarea
+              v-model="state.answer_en"
+              class="w-full"
+              autoresize
+              :rows="3"
+            />
+          </UFormField>
+
+
+
+
+          <UFormField required :label="$t('question')" name="question_ar">
+            <UInput v-model="state.question_ar" class="w-full" />
+          </UFormField>
           <UFormField
             required
             :label="$t('answer')"
@@ -23,7 +42,7 @@
             class="md:col-span-3"
           >
             <UTextarea
-              v-model="state.answer"
+              v-model="state.answer_ar"
               class="w-full"
               autoresize
               :rows="3"
@@ -68,16 +87,20 @@ const props = defineProps<{
 }>();
 
 const schema = z.object({
-  question: z.string().min(2, t("fieldRequired")),
-  answer: z.string().min(2, t("fieldRequired")),
+  question_en: z.string().min(2, t("fieldRequired")),
+  answer_en: z.string().min(2, t("fieldRequired")),
+  question_ar: z.string().min(2, t("fieldRequired")),
+  answer_ar: z.string().min(2, t("fieldRequired")),
 });
 const open = ref(false);
 
 type Schema = z.output<typeof schema>;
 
 const state = ref({
-  question: props.FAQ.question,
-  answer: props.FAQ.answer,
+  question_en: props.FAQ.question.en,
+  answer_en: props.FAQ.answer.en,
+  question_ar: props.FAQ.question.ar,
+  answer_ar: props.FAQ.answer.ar,
 });
 
 const serverError = ref<any | null>(null);
