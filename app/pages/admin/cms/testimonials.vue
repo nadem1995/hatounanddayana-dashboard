@@ -72,18 +72,18 @@ const columns = [
       h("p", { class: "font-semibold text-highlighted" }, row.original.rating),
   },
   {
-    id: "testimonial_message",
-    accessorKey: "message",
-    header: () => t("message"),
+    id: "testimonial_message_en",
+    accessorKey: "message_en",
+    header: () => t("message") + ' EN',
     cell: ({ row }) =>
-      h("p", { class: "font-semibold text-highlighted" }, row.original.message),
+      h("p", { class: "font-semibold text-highlighted" }, row.original.message.en),
   },
   {
-    id: "testimonial_source",
-    accessorKey: "source",
-    header: () => t("source"),
+    id: "testimonial_message_ar",
+    accessorKey: "message_ar",
+    header: () => t("message"),
     cell: ({ row }) =>
-      h("p", { class: "font-semibold text-highlighted" }, row.original.source),
+      h("p", { class: "font-semibold text-highlighted" }, row.original.message.ar),
   },
   {
     id: "actions",

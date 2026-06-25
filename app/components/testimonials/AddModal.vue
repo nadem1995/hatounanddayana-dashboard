@@ -1,5 +1,5 @@
 <template>
-  <UModal v-model:open="open" :title="$t('addNewFAQ')">
+  <UModal v-model:open="open" :title="$t('addNewTestimonial')">
     <UButton
       class="cursor-pointer"
       :label="$t('addNewTestimonial')"
@@ -13,22 +13,12 @@
         class="space-y-5"
         @submit="onSubmit"
       >
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 xs:grid-cols-3 gap-4">
           <!-- Name -->
           <UFormField required :label="$t('name')" name="name">
             <UInput
               v-model="state.name"
               class="w-full"
-              :placeholder="$t('namePlaceholder')"
-            />
-          </UFormField>
-
-          <!-- Source -->
-          <UFormField required :label="$t('source')" name="source">
-            <UInput
-              v-model="state.source"
-              class="w-full"
-              :placeholder="$t('sourcePlaceholder')"
             />
           </UFormField>
 
@@ -37,7 +27,6 @@
             <USelect
               v-model="state.rating"
               class="w-full"
-              :placeholder="$t('ratingPlaceholder')"
               :items="[1, 2, 3, 4, 5]"
             />
           </UFormField>
@@ -45,14 +34,30 @@
           <!-- Message (full width) -->
           <UFormField
           required
-            :label="$t('message')"
-            name="message"
+            :label="$t('message') + ' EN'"
+            name="message_en"
             class="md:col-span-3"
           >
             <UTextarea
-              v-model="state.message"
+              v-model="state.message_en"
               class="w-full"
-              :placeholder="$t('messagePlaceholder')"
+              autoresize
+              :rows="3"
+            />
+          </UFormField>
+
+
+
+
+          <UFormField
+            required
+            :label="$t('message')"
+            name="message_ar"
+            class="md:col-span-3"
+          >
+            <UTextarea
+              v-model="state.message_ar"
+              class="w-full"
               autoresize
               :rows="3"
             />
@@ -96,8 +101,8 @@ const props = defineProps<{
 
 const schema = z.object({
   name: z.string().min(2, t("fieldRequired")),
-  message: z.string().min(2, t("fieldRequired")),
-  source: z.string().min(2, t("fieldRequired")),
+  message_en: z.string().min(2, t("fieldRequired")),
+  message_ar: z.string().min(2, t("fieldRequired")),
   rating: z.number(t("fieldRequired")).min(1).max(5),
 });
 const open = ref(false);
@@ -106,8 +111,8 @@ type Schema = z.output<typeof schema>;
 
 const state = ref({
   name: '',
-  message: '',
-  source: '',
+  message_en: '',
+  message_ar: '',
   rating: 5,
 });
 
@@ -133,8 +138,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
     state.value = {
       name: '',
-      message: '',
-      source: '',
+      message_en: '',
+      message_ar: '',
+
       rating: 5,
     };
   } catch (error: any) {
