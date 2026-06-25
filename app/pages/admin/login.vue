@@ -108,8 +108,8 @@ const isLoading = ref(false);
 const showPassword = ref(false);
 
 const state = ref({
-  email: "admin1@test.com",
-  password: "Password@123",
+  email: "",
+  password: "",
 });
 
 // Validation schema with i18n
