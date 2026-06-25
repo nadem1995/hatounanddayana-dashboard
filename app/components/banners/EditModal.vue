@@ -8,9 +8,14 @@
         class="space-y-5"
         @submit="onSubmit"
       >
-          <UFormField name="statement" :label="$t('editStatement')">
-            <UInput v-model="state.statement" class="w-full" />
+          <UFormField name="statement_en" :label="$t('editStatement') + ' EN'">
+            <UInput v-model="state.statement_en" class="w-full" />
           </UFormField>
+
+        <UFormField name="statement_ar" :label="$t('editStatement') ">
+          <UInput v-model="state.statement_ar" class="w-full" />
+        </UFormField>
+
 
         <USeparator color="primary" type="solid" />
 
@@ -52,14 +57,16 @@ const props = defineProps<{
 }>();
 
 const schema = z.object({
-  statement: z.string().min(1, t("fieldRequired")),
+  statement_en: z.string().min(1, t("fieldRequired")),
+  statement_ar: z.string().min(1, t("fieldRequired")),
 });
 
 type Schema = z.output<typeof schema>;
 const isLoading = ref(false);
 
 const state = ref<Schema>({
-  statement: props.banner.statement,
+  statement_en: props.banner.statement.en,
+  statement_ar: props.banner.statement.ar,
 });
 
 const serverError = ref<any | null>(null);

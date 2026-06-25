@@ -253,5 +253,6 @@
   "dimensionWarning": "Image dimensions do not match the recommended size",
   "uploadedSize": "Uploaded size",
   "dropImageHere": "Drop your image here",
-  "errorLoadingImage": "Failed to load image"
+  "errorLoadingImage": "Failed to load image",
+  "reset": "Reset"
 }

@@ -253,5 +253,6 @@
   "dimensionWarning": "أبعاد الصورة لا تتطابق مع الحجم الموصى به",
   "uploadedSize": "حجم الصورة المرفوعة",
   "dropImageHere": "أسقط صورتك هنا",
-  "errorLoadingImage": "فشل تحميل الصورة"
+  "errorLoadingImage": "فشل تحميل الصورة",
+  "reset": "إعادة ضبط"
 }

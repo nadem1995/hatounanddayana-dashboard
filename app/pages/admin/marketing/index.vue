@@ -13,13 +13,17 @@
         :schema="schema"
         :state="state"
         :validate-on="['submit']"
-        class="flex items-start gap-2"
+        class="flex items-end gap-2"
         @submit="onSubmit"
       >
-        <UFormField :label="$t('newStatmen')" name="statement" class="flex-1">
-          <UInput v-model="state.statement" class="w-full" />
+        <UFormField required :label="$t('newStatmen') + ' EN'" name="statement_en" class="flex-1">
+          <UInput v-model="state.statement_en" class="w-full" />
         </UFormField>
-        <UButton type="submit" :disabled="state.statement===''" :loading="isLoading" class="mt-6">
+        <UFormField required :label="$t('newStatmen') " name="statement_ar" class="flex-1">
+          <UInput v-model="state.statement_ar" class="w-full" />
+        </UFormField>
+        <UButton :label="$t('reset')" @click="reset"/>
+        <UButton type="submit" :disabled="state.statement_en=='' || state.statement_ar==''" :loading="isLoading">
           {{ $t("add") }}
         </UButton>
       </UForm>
@@ -55,11 +59,13 @@ useHead({
 });
 
 const schema = z.object({
-  statement: z.string().min(1, t("fieldRequired")),
+  statement_en: z.string().min(1, t("fieldRequired")),
+  statement_ar: z.string().min(1, t("fieldRequired")),
 });
 
 const state = reactive({
-  statement: '',
+  statement_en: '',
+  statement_ar: '',
 });
 
 const RESOURCE_PATH = "marketing/banners";
@@ -89,7 +95,8 @@ async function onSubmit(event) {
       icon: "i-lucide-check-circle",
     });
 
-    state.statement = undefined;
+    state.statement_en = undefined;
+    state.statement_ar = undefined;
     refresh();
   } catch (error) {
     if (error.status === 422) {
@@ -111,15 +118,28 @@ const editBannersModel = overlay.create(LazyBannersEditModal);
 
 const columns = [
   {
-    id: "banner_statement",
-    accessorKey: "statement",
+    id: "banner_statement_en",
+    accessorKey: "statement_en",
+    header: () => t("statement") + ' EN',
+    cell: ({ row }) =>
+      h("div", [
+        h(
+          "p",
+          { class: "font-semibold text-highlighted" },
+          row.original.statement.en
+        ),
+      ]),
+  },
+  {
+    id: "banner_statement_ar",
+    accessorKey: "statement_ar",
     header: () => t("statement"),
     cell: ({ row }) =>
       h("div", [
         h(
           "p",
           { class: "font-semibold text-highlighted" },
-          row.original.statement
+          row.original.statement.ar
         ),
       ]),
   },
@@ -158,7 +178,7 @@ const columns = [
               },
             ],
           ],
-          
+
         },
         () =>
           h(UButton, {
@@ -169,4 +189,10 @@ const columns = [
       ),
   },
 ];
+
+
+ function reset (){
+   state.statement_en = '';
+   state.statement_ar = '';
+}
 </script>
