@@ -65,6 +65,11 @@ const links = [
       to: { name: "admin-marketing" },
     },
     {
+      label: computed(() => t("pages")),
+      icon: "i-lucide-files",
+      to: { name: "admin-pages" },
+    },
+    {
       label: computed(() => t("cms")),
       icon: "i-lucide-book",
       defaultOpen: true,

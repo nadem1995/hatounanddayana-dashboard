@@ -254,5 +254,12 @@
   "uploadedSize": "Uploaded size",
   "dropImageHere": "Drop your image here",
   "errorLoadingImage": "Failed to load image",
-  "reset": "Reset"
+  "reset": "Reset",
+  "title": "Title",
+  "addNewPage": "Add new page",
+  "content": "Content",
+  "contentPlaceholder": "write the content here...",
+  "createPage": "Create page",
+  "editPage": "Edit page"
+
 }

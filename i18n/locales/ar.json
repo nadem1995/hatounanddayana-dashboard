@@ -254,5 +254,11 @@
   "uploadedSize": "حجم الصورة المرفوعة",
   "dropImageHere": "أسقط صورتك هنا",
   "errorLoadingImage": "فشل تحميل الصورة",
-  "reset": "إعادة ضبط"
+  "reset": "إعادة ضبط",
+  "title": "العنوان",
+  "addNewPage": "إضافة صفحة جديدة",
+  "content": "المحتوى",
+  "contentPlaceholder": "أكتب المحتوى هنا ...",
+  "createPage":"إنشاء صفحة",
+  "editPage": "تعديل الصفحة"
 }
