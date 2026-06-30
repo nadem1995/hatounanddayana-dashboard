@@ -26,16 +26,8 @@
           <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
 
             <!-- Sidebar -->
-            <div class="xl:sticky xl:top-6 space-y-4">
               <ProductsStatusForm :state="state" />
-              <UButton
-                type="submit"
-                block
-                :loading-auto="true"
-                icon="i-lucide-save"
-                :label="$t('save')"
-              />
-            </div>
+
 
             <!-- Main Content -->
             <div class="xl:col-span-2 space-y-6">
@@ -100,6 +92,14 @@
 
             </div>
           </div>
+          <USeparator class="my-5"/>
+          <UButton
+            type="submit"
+            block
+            :loading-auto="true"
+            icon="i-lucide-save"
+            :label="$t('save')"
+          />
         </UForm>
       </div>
     </template>
