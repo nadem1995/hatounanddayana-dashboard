@@ -53,11 +53,11 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <UFormField :label="$t('title') + ' EN'" name="title_en" required>
-                    <UInput v-model="state.title_en" :placeholder="$t('title_en')" class="w-full" />
+                    <UInput v-model="state.title_en"  class="w-full" />
                   </UFormField>
 
                   <UFormField :label="$t('title') + ' AR'" name="title_ar" required>
-                    <UInput v-model="state.title_ar" :placeholder="$t('title_ar')" dir="rtl" class="w-full" />
+                    <UInput v-model="state.title_ar"  dir="rtl" class="w-full" />
                   </UFormField>
                 </div>
               </UCard>
