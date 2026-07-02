@@ -258,8 +258,8 @@
   "title": "Title",
   "addNewPage": "Add new page",
   "content": "Content",
-  "contentPlaceholder": "write the content here...",
+  "contentPlaceholder": "write the content here ...",
   "createPage": "Create page",
-  "editPage": "Edit page"
-
+  "editPage": "Edit page",
+  "descriptionPlaceholder": "Write the description here ..."
 }

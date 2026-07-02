@@ -17,8 +17,7 @@
         v-for="category in categories"
         :key="category.id"
         color="neutral"
-        >{{ category.name }}</UBadge
-      >
+        >{{ category.name}}</UBadge>
     </div>
   </UCard>
 </template>

@@ -97,12 +97,12 @@
                 <template #content="{ item }">
                   <div
                     v-if="item.value === 'en'"
-                    class="prose prose-sm max-w-none text-(--ui-text) pt-4"
+                    class="content pt-4"
                     v-html="page.content_en"
                   />
                   <div
                     v-else
-                    class="prose prose-sm max-w-none text-(--ui-text) pt-4"
+                    class="content pt-4"
                     dir="rtl"
                     v-html="page.content_ar"
                   />
@@ -125,3 +125,13 @@ useHead({
   title: () => t('pages'),
 });
 </script>
+
+
+<style scoped>
+.content :deep(h1) { font-size: 2.25rem; font-weight: 700; }
+.content :deep(h2) { font-size: 1.875rem; font-weight: 700; }
+.content :deep(h3) { font-size: 1.5rem; font-weight: 600; }
+.content :deep(h4) { font-size: 1.25rem; font-weight: 600; }
+.content :deep(ul) { list-style: disc; padding-left: 1.5rem; }
+.content :deep(ol) { list-style: decimal; padding-left: 1.5rem; }
+</style>

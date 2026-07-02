@@ -28,7 +28,6 @@
           <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <div class="space-y-6">
               <ProductsStatusForm :state="state" />
-              <ProductsBestSellerForm :state="state" />
               <ProductsCategoriesForm
                 :state="state"
                 :categories="data?.data?.categories"
@@ -39,13 +38,6 @@
                 :state="state"
                 :server-error="serverError"
               />
-              <!-- <ProductsDiscountForm
-                v-model="_discount"
-                :state="state"
-                :discounts="data?.data?.discounts"
-                :loading="pending"
-                :server-error="serverError"
-              /> -->
             </div>
             <div class="xl:col-span-2 space-y-6">
               <ProductsInformationForm
@@ -88,17 +80,19 @@ const schema = z.object({}).passthrough();
 const { data, pending } = await useApiFetch("products/create-data", {
   lazy: true,
 });
-const _discount = ref(null);
 
 const state = ref({
-  name: "",
-  description: "",
+  name_en: "",
+  name_ar: "",
+  description_en: "",
+  description_ar: "",
   price: 0,
   status: false,
   is_best_seller: false,
   variants: [
     {
-      color_name: "",
+      color_name_en: "",
+      color_name_ar: "",
       color_code: "#000000",
       status: true,
       images: [],
@@ -116,19 +110,18 @@ async function onSubmit(event) {
   try {
     const formData = new FormData();
 
-    formData.append("name", state.value.name);
-    formData.append("description", state.value.description);
+    formData.append("name_en", state.value.name_en);
+    formData.append("name_ar", state.value.name_ar);
+    formData.append("description_en", state.value.description_en);
+    formData.append("description_ar", state.value.description_ar);
     formData.append("price", state.value.price);
     formData.append("status", state.value.status ? "1" : "0");
     formData.append("is_best_seller", state.value.is_best_seller ? "1" : "0");
 
     // Add variants
     state.value.variants.forEach((variant, index) => {
-      formData.append(
-        `variants[${index}][color_name]`,
-        variant.color_name,
-      );
-      
+      formData.append(`variants[${index}][color_name_en]`, variant.color_name_en);
+      formData.append(`variants[${index}][color_name_ar]`, variant.color_name_ar);
       formData.append(`variants[${index}][color_code]`, variant.color_code);
       formData.append(`variants[${index}][status]`, variant.status ? "1" : "0");
 

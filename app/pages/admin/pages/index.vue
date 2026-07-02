@@ -100,7 +100,7 @@ const columns = [
           modelValue: row.original.status,
           onClick: async () => {
             await toggle(`${RESOURCE_PATH}/${row.original.id}/status`);
-            refresh();
+            refresh;
           },
         }),
       ]);

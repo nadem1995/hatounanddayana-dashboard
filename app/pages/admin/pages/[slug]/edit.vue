@@ -65,7 +65,7 @@
 
                 <UFormField name="content_en" required>
                   <UEditor v-model="state.content_en" :placeholder="$t('contentPlaceholder')" class="w-full min-h-64" v-slot="{ editor }">
-                    <UEditorToolbar :editor="editor" :items="items" class="overflow-x-auto items-center justify-center xl:p-4 p-3 rounded-lg mb-5" />
+                    <UEditorToolbar :editor="editor" :items="editorItems" class="overflow-x-auto items-center justify-center xl:p-4 p-3 rounded-lg mb-5" />
                   </UEditor>
                 </UFormField>
               </UCard>
@@ -83,7 +83,7 @@
 
                 <UFormField name="content_ar" required>
                   <UEditor v-model="state.content_ar" :placeholder="$t('contentPlaceholder')" class="w-full min-h-64" v-slot="{ editor }">
-                    <UEditorToolbar :editor="editor" :items="items" class="items-center justify-center overflow-x-auto xl:p-4 p-3 rounded-lg mb-5" />
+                    <UEditorToolbar :editor="editor" :items="editorItems" class="items-center justify-center overflow-x-auto xl:p-4 p-3 rounded-lg mb-5" />
                   </UEditor>
                 </UFormField>
               </UCard>
@@ -115,21 +115,6 @@ const route = useRoute();
 useHead({
   title: () => t("editPage"),
 });
-
-const items = [
-  { kind: 'paragraph', icon: 'i-lucide-pilcrow' },
-  { kind: 'heading', level: 1, icon: 'i-lucide-heading-1' },
-  { kind: 'heading', level: 2, icon: 'i-lucide-heading-2' },
-  { kind: 'heading', level: 3, icon: 'i-lucide-heading-3' },
-  { kind: 'heading', level: 4, icon: 'i-lucide-heading-4' },
-  { kind: 'image', icon: 'i-lucide-image' },
-  { kind: 'mark', mark: 'bold', icon: 'i-lucide-bold' },
-  { kind: 'mark', mark: 'italic', icon: 'i-lucide-italic' },
-  { kind: 'bulletList', icon: 'i-lucide-list' },
-  { kind: 'orderedList', icon: 'i-lucide-list-ordered' },
-  { kind: 'blockquote', icon: 'i-lucide-quote' },
-  { kind: 'mark', mark: 'underline', icon: 'i-lucide-underline' },
-]
 
 const schema = z.object({
   title_en: z.string().min(1),

@@ -62,14 +62,27 @@
             <div class="flex flex-col gap-2">
 
               <UFormField
-                :label="$t('color')"
-                :name="`variants.${index}.color_name`"
+                :label="$t('colorEn')"
+                :name="`variants.${index}.color_name_en`"
                 required
               >
                 <UInput
-                  v-model="variant.color_name"
+                  v-model="variant.color_name_en"
                   icon="i-lucide-brush"
                   class="w-full"
+                />
+              </UFormField>
+
+              <UFormField
+                :label="$t('colorAr')"
+                :name="`variants.${index}.color_name_ar`"
+                required
+              >
+                <UInput
+                  v-model="variant.color_name_ar"
+                  icon="i-lucide-brush"
+                  class="w-full"
+                  dir="rtl"
                 />
               </UFormField>
 
@@ -86,7 +99,6 @@
                 />
               </UFormField>
 
-              
             </div>
             <div class="flex flex-col gap-2">
               <UFormField
@@ -108,6 +120,7 @@
               </UFormField>
             </div>
           </div>
+
           <UFormField
             :name="`variants.${index}.images`"
             required
@@ -165,16 +178,15 @@
 import * as z from "zod";
 const { t } = useI18n();
 
-// Accept state from parent
 const props = defineProps<{
   state: any;
 }>();
 
-// Define schema for the variants array
 const variantsSchema = z.object({
   variants: z.array(
     z.object({
-      color_name: z.string().min(1, t("fieldRequired")),
+      color_name_en: z.string().min(1, t("fieldRequired")),
+      color_name_ar: z.string().min(1, t("fieldRequired")),
       color_code: z
         .string()
         .regex(/^#([0-9A-F]{3}){1,2}$/i, t("invalidColorCode")),
@@ -195,7 +207,8 @@ function addVariant() {
     props.state.variants = [];
   }
   props.state.variants.push({
-    color_name: "",
+    color_name_en: "",
+    color_name_ar: "",
     color_code: "#000000",
     status: true,
     images: [],

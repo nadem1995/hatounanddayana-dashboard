@@ -3,7 +3,7 @@
     <template #header>
       <UDashboardNavbar :title="$t('products')">
         <template #leading>
-          <UDashboardSidebarCollapse />
+          <UDashboardSidebarCollapse/>
         </template>
 
         <template #right>
@@ -28,7 +28,7 @@
           v-model="categories"
           :items="products?.meta?.categories || []"
           value-key="id"
-          label-key="name"
+          label-key="name.local"
           icon="i-lucide-picture-in-picture-2"
           multiple
           clear
@@ -37,7 +37,7 @@
         >
           <template #item-label="{ item }">
             <div class="flex flex-col gap-1">
-              <span>{{ item.name }}</span>
+              <span>{{ item.name.local }}</span>
             </div>
           </template>
         </USelectMenu>
@@ -51,14 +51,6 @@
           label-key="label"
         /> -->
 
-        <UCheckbox
-          v-model="is_best_seller"
-          :label="$t('showBestSellerOnly')"
-          color="primary"
-          class="col-span-1"
-          :model-value="is_best_seller === 'true'"
-          @update:model-value="(value) => (is_best_seller = value)"
-        />
       </UDashboardToolbar>
     </template>
 
@@ -74,7 +66,7 @@
         }"
       >
         <template #loading>
-          <DataTableLoading />
+          <DataTableLoading/>
         </template>
       </UTable>
       <!-- Pagination Footer -->
@@ -110,10 +102,10 @@
 </template>
 
 <script setup>
-import { LazyDeleteModal } from "#components";
+import {LazyDeleteModal} from "#components";
 
-const { t } = useI18n();
-const { toggle } = useToggleStatus();
+const {t} = useI18n();
+const {toggle} = useToggleStatus();
 const overlay = useOverlay();
 
 useHead({
@@ -127,60 +119,30 @@ const RESOURCE_PATH = "products";
 
 // Helper function to clean query params
 function updateQuery(newParams) {
-  const query = { ...route.query, ...newParams };
+  const query = {...route.query, ...newParams};
   Object.keys(query).forEach((key) => {
     if (query[key] === "" || query[key] === null || query[key] === undefined) {
       delete query[key];
     }
   });
-  router.push({ query });
+  router.push({query});
 }
 
 const search = computed({
   get: () => route.query.search ?? "",
   set: (search) => {
     delete route.query["page"];
-    updateQuery({ search: search || undefined });
+    updateQuery({search: search || undefined});
   },
 });
 
 const page = computed({
   get: () => Number(route.query.page) || 1,
   set: (page) => {
-    updateQuery({ page: page > 1 ? page : undefined });
+    updateQuery({page: page > 1 ? page : undefined});
   },
 });
 
-/* const discountItems = ref([
-  {
-    label: computed(() => t("all")),
-    value: null,
-  },
-  {
-    label: computed(() => t("hasDiscount")),
-    value: "true",
-  },
-  {
-    label: computed(() => t("withOutDiscount")),
-    value: "false",
-  },
-]);
-
-const discount = computed({
-  get: () => route.query.discount ?? null,
-  set: (value) => {
-    delete route.query["page"];
-    updateQuery({ discount: value });
-  },
-}); */
-
-const is_best_seller = computed({
-  get: () => route.query.is_best_seller ?? null,
-  set: (value) => {
-    delete route.query["page"];
-    updateQuery({ is_best_seller: value ? "true" : null });
-  },
-});
 
 const categories = computed({
   get: () => {
@@ -193,16 +155,17 @@ const categories = computed({
     delete route.query["page"];
     const categoriesParam =
       categories.length > 0 ? categories.join(",") : undefined;
-    updateQuery({ categories: categoriesParam });
+    updateQuery({categories: categoriesParam});
   },
 });
 
 const {
   data: products,
   pending,
-  refresh} = await useApiFetch(`${RESOURCE_PATH}`, {
+  refresh
+} = await useApiFetch(`${RESOURCE_PATH}`, {
   lazy: true,
-  query: { search, page, categories, is_best_seller },
+  query: {search, page, categories},
   default: () => ({
     data: [],
     meta: {
@@ -220,130 +183,45 @@ const USwitch = resolveComponent("USwitch");
 const UButton = resolveComponent("UButton");
 const UDropdownMenu = resolveComponent("UDropdownMenu");
 const deleteModal = overlay.create(LazyDeleteModal);
+const loadingId = ref(null);
 
 const columns = [
   {
-    id: "product",
-    accessorKey: "name",
+    id: "name_ar",
+    accessorKey: "name_ar",
     header: () => t("name"),
-    cell: ({ row }) => {
+    cell: ({row}) => {
       return h(
-          "p",
-          { class: "font-semibold text-highlighted" },
-          row.original.name,
-        );
+        "p",
+        {class: "font-semibold text-highlighted"},
+        row.original.name.ar,
+      );
     },
   },
-  /* {
-    id: "pricing",
-    accessorKey: "price",
-    header: () => t("pricing"),
-    cell: ({ row }) => {
-      const hasDiscount = row.original.discount;
-      return h("div", { class: "flex flex-col gap-1" }, [
-        h("div", { class: "flex items-center gap-2" }, [
-          h(
-            "span",
-            {
-              class: hasDiscount
-                ? "line-through text-muted text-sm"
-                : "font-medium text-highlighted",
-            },
-            `$ ${row.original.price.usd}`,
-          ),
-          hasDiscount &&
-            h(
-              "span",
-              {
-                class: "font-semibold text-success",
-              },
-              `$${row.original.price.sale.usd}`,
-            ),
-        ]),
-        h("div", { class: "flex items-center gap-2" }, [
-          h(
-            "span",
-            {
-              class: hasDiscount
-                ? "line-through text-muted text-xs"
-                : "text-sm text-muted",
-            },
-            `${row.original.price.syp} SYP`,
-          ),
-          hasDiscount &&
-            h(
-              "span",
-              {
-                class: "text-sm text-success",
-              },
-              `${row.original.price.sale.syp} SYP`,
-            ),
-        ]),
-      ]);
+  {
+    id: "name_en",
+    accessorKey: "name_en",
+    header: () => t("name")+ ' EN',
+    cell: ({row}) => {
+      return h(
+        "p",
+        {class: "font-semibold text-highlighted"},
+        row.original.name.en,
+      );
     },
-  }, */
-
-  /* {
-    id: "discount",
-    accessorKey: "discount",
-    header: () => t("discount"),
-    cell: ({ row }) => {
-      if (!row.original.discount) {
-        return h("span", { class: "text-muted" }, "-");
-      }
-
-      const discountValue =
-        row.original.discount.type === "percentage"
-          ? `${row.original.discount.value}%`
-          : `$ ${row.original.discount.value}`;
-
-      return h(UBadge, {
-        color: "success",
-        variant: "subtle",
-        label: discountValue,
-      });
-    },
-
-    cell: ({ row }) => {
-      if (!row.original.discount) {
-        return h("span", { class: "text-muted" }, "-");
-      } else {
-        if (row.original.discount.type === "fixed") {
-          return h("div", { class: "flex flex-col gap-1 py-1" }, [
-            h(
-              "p",
-              { class: "font-semibold text-highlighted" },
-              `${row.original.discount.value.usd} $`,
-            ),
-            h(
-              "p",
-              { class: "text-sm text-muted" },
-              `${row.original.discount.value.syp} SYP`,
-            ),
-          ]);
-        } else {
-          return h(
-            "p",
-            { class: "font-semibold text-highlighted" },
-            `${row.original.discount.value} %`,
-          );
-        }
-      }
-    },
-  }, */
+  },
   {
     id: "pricing",
     accessorKey: "price",
     header: () => t("pricing"),
-    cell: ({ row }) => {
+    cell: ({row}) => {
       return h(
-          "p",
-          { class: "font-semibold text-highlighted" },
-          row.original.price,
-        );
+        "p",
+        {class: "font-semibold text-highlighted"},
+        row.original.price,
+      );
     },
   },
-  
   {
     id: "status",
     accessorKey: "status",
@@ -352,27 +230,14 @@ const columns = [
       return h("div", { class: "flex items-center gap-2" }, [
         h(USwitch, {
           modelValue: row.original.status,
-          onClick: () =>
-            toggle(
-              `${RESOURCE_PATH}/${row.original.id}/status`),
-        }),
-      ]);
-    },
-  },
-  {
-    id: "bestSeller",
-    accessorKey: "bestSeller",
-    header: () => t("bestSeller"),
-    cell: ({ row }) => {
-      return h("div", { class: "flex items-center gap-2" }, [
-        h(USwitch, {
-          modelValue: row.original.is_best_seller,
-          onClick: () =>
-            toggle(
-              `${RESOURCE_PATH}/${row.original.id}/best-seller`,
-              t("bestSellerEnabled"),
-              t("bestSellerDisabled"),
-            ),
+          loading: loadingId.value === row.original.id,
+          disabled: loadingId.value === row.original.id,
+          onClick: async () => {
+            loadingId.value = row.original.id;
+            await toggle(`${RESOURCE_PATH}/${row.original.id}/status`);
+            await refresh();
+            loadingId.value = null;
+          },
         }),
       ]);
     },
@@ -381,7 +246,7 @@ const columns = [
     id: "actions",
     accessorKey: "actions",
     header: "",
-    cell: ({ row }) => {
+    cell: ({row}) => {
       return h(
         UDropdownMenu,
         {
@@ -392,7 +257,7 @@ const columns = [
                 icon: "i-lucide-eye",
                 to: {
                   name: "admin-products-slug",
-                  params: { slug: row.original.slug },
+                  params: {slug: row.original.slug},
                 },
               },
             ],
@@ -402,7 +267,7 @@ const columns = [
                 icon: "i-lucide-edit-2",
                 to: {
                   name: "admin-products-slug-edit",
-                  params: { slug: row.original.slug },
+                  params: {slug: row.original.slug},
                 },
               },
             ],
@@ -420,7 +285,7 @@ const columns = [
               },
             ],
           ],
-          content: { align: "end" },
+          content: {align: "end"},
         },
         () =>
           h(UButton, {
@@ -433,3 +298,5 @@ const columns = [
   },
 ];
 </script>
+
+

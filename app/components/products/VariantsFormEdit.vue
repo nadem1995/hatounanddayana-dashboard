@@ -1,5 +1,5 @@
 <template>
-   <UForm :schema="variantsSchema" :state="props.state" nested>
+  <UForm :schema="variantsSchema" :state="props.state" nested>
     <UCard>
       <template #header>
         <div class="flex items-center justify-between">
@@ -16,17 +16,10 @@
         </div>
       </template>
 
-       <div v-if="props.state.variants?.length === 0" class="text-center py-8">
-        <UIcon
-          name="i-lucide-palette"
-          class="w-12 h-12 text-gray-400 mx-auto mb-3"
-        />
-        <p class="text-sm text-gray-500">
-          {{ $t("noVariantsAdded") }}
-        </p>
-        <p class="text-xs text-gray-400 mt-1">
-          {{ $t("clickAddVariantToStart") }}
-        </p>
+      <div v-if="props.state.variants?.length === 0" class="text-center py-8">
+        <UIcon name="i-lucide-palette" class="w-12 h-12 text-gray-400 mx-auto mb-3" />
+        <p class="text-sm text-gray-500">{{ $t("noVariantsAdded") }}</p>
+        <p class="text-xs text-gray-400 mt-1">{{ $t("clickAddVariantToStart") }}</p>
       </div>
 
       <div v-else class="space-y-4">
@@ -39,10 +32,8 @@
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-3">
                 <div
-                  class="w-15 h-15 rounded-lg border-2 border-gray-200 dark:border-gray-700"
-                  :style="{
-                    backgroundColor: variant.color_code || '#cccccc',
-                  }"
+                  class="size-14 rounded-lg border-2 border-gray-200 dark:border-gray-700"
+                  :style="{ backgroundColor: variant.color_code || '#cccccc' }"
                 />
                 <span class="font-semibold">
                   {{ $t("variant") }} ({{ (index as number) + 1 }})
@@ -52,7 +43,6 @@
                 icon="i-lucide-trash-2"
                 color="error"
                 variant="ghost"
-                class="cursor-pointer"
                 @click="removeVariant(index as number)"
               />
             </div>
@@ -60,20 +50,34 @@
 
           <div class="grid md:grid-cols-2 gap-4">
             <div class="flex flex-col gap-2">
+              <!-- ✅ Arabic color name -->
               <UFormField
                 :label="$t('color')"
-                :name="`variants.${index}.color_name`"
+                :name="`variants.${index}.color_name_ar`"
                 required
               >
-              
                 <UInput
-                  v-model="variant.color_name"
+                  v-model="variant.color_name_ar"
+                  icon="i-lucide-brush"
+                  class="w-full"
+                  dir="rtl"
+                />
+              </UFormField>
+
+              <!-- ✅ English color name -->
+              <UFormField
+                :label="$t('color') + ' EN'"
+                :name="`variants.${index}.color_name_en`"
+                required
+              >
+                <UInput
+                  v-model="variant.color_name_en"
                   icon="i-lucide-brush"
                   class="w-full"
                 />
               </UFormField>
 
-
+              <!-- HEX display (read-only) -->
               <UFormField
                 label="HEX"
                 :name="`variants.${index}.color_code`"
@@ -86,9 +90,8 @@
                   class="w-full"
                 />
               </UFormField>
-
-              
             </div>
+
             <div class="flex flex-col gap-2">
               <UFormField
                 :label="$t('colorCode')"
@@ -128,7 +131,6 @@
                     :alt="`Variant ${(index as number) + 1} Image ${(imgIndex as number) + 1}`"
                     class="w-full h-full object-cover"
                   />
-
                   <div
                     class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
                   >
@@ -148,7 +150,7 @@
               accept="image/*"
               icon="i-lucide-image"
               :label="$t('dropImagesHere')"
-              description="png , Jpg , webp"
+              description="png, jpg, webp"
               layout="grid"
               multiple
               :interactive="true"
@@ -176,7 +178,6 @@
                   <p class="font-bold">
                     {{ $t("newImages") }} ({{ files?.length }})
                   </p>
-
                   <UButton
                     icon="i-lucide-plus"
                     :label="$t('addMore')"
@@ -190,9 +191,9 @@
             </UFileUpload>
           </UFormField>
         </UCard>
-      </div> 
+      </div>
     </UCard>
-  </UForm> 
+  </UForm>
 </template>
 
 <script setup lang="ts">
@@ -208,29 +209,37 @@ const props = defineProps<{
 const variantsSchema = computed(() =>
   z.object({
     variants: z.array(
-      z.object({
-        id: z.number().optional(),
-        color_name: z.string().min(1, t("fieldRequired")),
-        color_code: z.string().regex(/^#([0-9A-F]{3}){1,2}$/i, t("invalidColorCode")),
-        status: z.boolean(),
-        images: z.array(z.object({ id: z.number(), url: z.string() })).optional(),
-        newImages: z.array(z.instanceof(File)).optional(),
-        _deleted_images: z.array(z.number()).optional(),
-      }).refine(
-        (variant) => {
-          const existingCount = variant.images?.filter(
-            (img) => !variant._deleted_images?.includes(img.id)
-          ).length ?? 0;
-          const newCount = variant.newImages?.length ?? 0;
-          return existingCount + newCount >= 1;
-        },
-        {
-          message: t("atLeastOneImageRequired"),
-          path: ["images"], // ✅ field-level error
-        }
-      )
+      z
+        .object({
+          id: z.number().optional(),
+          color_name_ar: z.string().min(1, t("fieldRequired")), // ✅
+          color_name_en: z.string().min(1, t("fieldRequired")), // ✅
+          color_code: z
+            .string()
+            .regex(/^#([0-9A-F]{3}){1,2}$/i, t("invalidColorCode")),
+          status: z.boolean(),
+          images: z
+            .array(z.object({ id: z.number(), url: z.string() }))
+            .optional(),
+          newImages: z.array(z.instanceof(File)).optional(),
+          _deleted_images: z.array(z.number()).optional(),
+        })
+        .refine(
+          (variant) => {
+            const existingCount =
+              variant.images?.filter(
+                (img) => !variant._deleted_images?.includes(img.id),
+              ).length ?? 0;
+            const newCount = variant.newImages?.length ?? 0;
+            return existingCount + newCount >= 1;
+          },
+          {
+            message: t("atLeastOneImageRequired"),
+            path: ["images"],
+          },
+        ),
     ),
-  })
+  }),
 );
 
 function addVariant() {
@@ -238,7 +247,8 @@ function addVariant() {
     props.state.variants = [];
   }
   props.state.variants.push({
-    color_name: "",
+    color_name_ar: "", // ✅
+    color_name_en: "", // ✅
     color_code: "#000000",
     status: true,
     images: [],
@@ -254,7 +264,7 @@ function removeVariant(index: number) {
 function getExistingImages(variant: any) {
   if (!variant.images) return [];
   return variant.images.filter(
-    (img: any) => !variant._deleted_images?.includes(img.id)
+    (img: any) => !variant._deleted_images?.includes(img.id),
   );
 }
 
@@ -263,7 +273,4 @@ function deleteExistingImage(variantIndex: number, imageId: number) {
   if (!variant._deleted_images) variant._deleted_images = [];
   variant._deleted_images.push(imageId);
 }
-
-// ✅ No manual URL cleanup needed — UFileUpload manages its own previews
-
 </script>

@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default <Partial<Config>>{
-  plugins: [require("tailwindcss-rtl")],
+  plugins: [require("tailwindcss-rtl"),require('@tailwindcss/typography')],
   // Enable RTL support
   theme: {
     extend: {

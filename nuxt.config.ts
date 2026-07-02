@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     public: {
-      apiBase: process.env.BASE_API || "https://api.hatounanddayana.com/api/admin",
+      apiBase: process.env.BASE_API || "http://127.0.0.1:8000/api/admin",
       appName: "HatounandDayana",
     },
   },

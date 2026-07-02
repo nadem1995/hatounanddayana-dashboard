@@ -260,5 +260,6 @@
   "content": "المحتوى",
   "contentPlaceholder": "أكتب المحتوى هنا ...",
   "createPage":"إنشاء صفحة",
-  "editPage": "تعديل الصفحة"
+  "editPage": "تعديل الصفحة",
+  "descriptionPlaceholder": "أكتب الوصف هنا ..."
 }

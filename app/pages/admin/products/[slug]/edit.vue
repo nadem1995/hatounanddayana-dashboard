@@ -27,8 +27,7 @@
         >
           <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <div class="space-y-6">
-               <ProductsStatusForm :state="state" />
-               <ProductsBestSellerForm :state="state" />
+              <ProductsStatusForm :state="state" />
               <ProductsCategoriesForm
                 :state="state"
                 :categories="data?.meta?.categories"
@@ -43,19 +42,17 @@
                 :state="state"
                 :server-error="serverError"
               />
-              <ProductsVariantsFormEdit :state="state" :is-edit="true" /> 
+              <ProductsVariantsFormEdit :state="state" :is-edit="true" />
             </div>
           </div>
 
-          <div
-            class="flex items-center gap-3 pt-6 border-t dark:border-gray-700"
-          >
+          <div class="flex items-center gap-3 pt-6 border-t dark:border-gray-700">
             <UButton
               type="submit"
               block
               size="lg"
-              :loading-auto="true"
-              icon="i-lucide-check"
+              :loading="isLoading"
+              icon="i-lucide-edit"
               :label="$t('edit')"
             />
           </div>
@@ -78,20 +75,21 @@ useHead({
 
 const schema = z.object({}).passthrough();
 
-const { data, pending, error } = await useApiFetch(
+const { data, pending, error: fetchError } = await useApiFetch(
   `products/edit/${route.params.slug}`,
 );
 
-if (error.value) {
+if (fetchError.value) {
   throw createError({ statusCode: 404, message: t("productNotFound") });
 }
 
 const state = ref({
-  name: "",
-  description: "",
+  name_ar: "",
+  name_en: "",
+  description_ar: "",
+  description_en: "",
   price: 0,
   status: false,
-  is_best_seller: false,
   variants: [],
   categories: [],
 });
@@ -101,14 +99,16 @@ const isLoading = ref(false);
 
 function mapProductToState(productData) {
   return {
-    name: productData.product.name,
-    description: productData.product.description,
+    name_en: productData.product.name.en,
+    name_ar: productData.product.name.ar,
+    description_ar: productData.product.description.ar,
+    description_en: productData.product.description.en,
     price: productData.product.price,
     status: productData.product.status,
-    is_best_seller: productData.product.is_best_seller,
     variants: productData.product.variants.map((variant) => ({
       id: variant.id,
-      color_name: variant.color.name,
+      color_name_ar: variant.color.name.ar,
+      color_name_en: variant.color.name.en,
       color_code: variant.color.code,
       status: variant.status ?? true,
       images: variant.images.map((img) => ({
@@ -122,10 +122,13 @@ function mapProductToState(productData) {
   };
 }
 
-// ✅ Actually populate the form state
-watch(data, (val) => {
-  if (val) state.value = mapProductToState(val);
-}, { immediate: true });
+watch(
+  data,
+  (val) => {
+    if (val) state.value = mapProductToState(val);
+  },
+  { immediate: true },
+);
 
 async function onSubmit() {
   isLoading.value = true;
@@ -134,11 +137,12 @@ async function onSubmit() {
   try {
     const formData = new FormData();
     formData.append("_method", "PUT");
-    formData.append("name", state.value.name);
-    formData.append("description", state.value.description);
+    formData.append("name_ar", state.value.name_ar);
+    formData.append("name_en", state.value.name_en);
+    formData.append("description_ar", state.value.description_ar);
+    formData.append("description_en", state.value.description_en);
     formData.append("price", state.value.price);
     formData.append("status", state.value.status ? "1" : "0");
-    formData.append("is_best_seller", state.value.is_best_seller ? "1" : "0");
 
     state.value.categories.forEach((categoryId, index) => {
       formData.append(`categories[${index}]`, categoryId);
@@ -146,7 +150,8 @@ async function onSubmit() {
 
     state.value.variants.forEach((variant, index) => {
       if (variant.id) formData.append(`variants[${index}][id]`, variant.id);
-      formData.append(`variants[${index}][color_name]`, variant.color_name);
+      formData.append(`variants[${index}][color_name_ar]`, variant.color_name_ar);
+      formData.append(`variants[${index}][color_name_en]`, variant.color_name_en);
       formData.append(`variants[${index}][color_code]`, variant.color_code);
       formData.append(`variants[${index}][status]`, variant.status ? "1" : "0");
 
@@ -171,20 +176,22 @@ async function onSubmit() {
       body: formData,
     });
 
+    const result = typeof response === "object" && response !== null ? response : {};
+
     toast.add({
-      title: response.message,
+      title: result.message ?? t("updatedSuccessfully"),
       color: "success",
       icon: "i-lucide-check-circle",
     });
 
     navigateTo({ name: "admin-products" });
-  } catch (error) {
-    if (error.status === 422) {
-      serverError.value = error.data.errors;
+  } catch (err) {
+    if (err?.status === 422) {
+      serverError.value = err.data?.errors ?? null;
     }
     toast.add({
       title: t("error"),
-      description: error.message || t("somethingWentWrong"),
+      description: err?.message || t("somethingWentWrong"),
       color: "error",
       icon: "i-lucide-alert-circle",
     });

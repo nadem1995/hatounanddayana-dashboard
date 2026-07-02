@@ -134,7 +134,7 @@ const USwitch = resolveComponent("USwitch");
 const UButton = resolveComponent("UButton");
 const UBadge = resolveComponent("UBadge");
 const UDropdownMenu = resolveComponent("UDropdownMenu");
-
+const loadingId = ref(null);
 const columns = [
   {
     id: "category_name_ar",
@@ -177,7 +177,14 @@ const columns = [
       return h("div", { class: "flex items-center gap-2" }, [
         h(USwitch, {
           modelValue: row.original.status,
-          onClick: () => toggle(`${RESOURCE_PATH}/${row.original.id}/status`),
+          loading: loadingId.value === row.original.id,
+          disabled: loadingId.value === row.original.id,
+          onClick: async () => {
+            loadingId.value = row.original.id;
+            await toggle(`${RESOURCE_PATH}/${row.original.id}/status`);
+            await refresh();
+            loadingId.value = null;
+          },
         }),
       ]);
     },
