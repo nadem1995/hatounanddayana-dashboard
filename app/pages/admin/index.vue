@@ -48,12 +48,12 @@
             :to="{ name: 'admin-products' }"
           />
 
-          <!-- <StatCard
-            icon="i-lucide-users"
-            :label="$t('customers')"
-            :value="data.stats.customers"
-            :to="{ name: 'admin-customers' }"
-          /> -->
+           <StatCard
+            icon="i-lucide-files"
+            :label="$t('pages')"
+            :value="data.stats.pages"
+            :to="{ name: 'admin-pages' }"
+          />
         </template>
       </UPageGrid>
     </template>

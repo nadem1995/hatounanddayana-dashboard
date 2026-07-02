@@ -261,5 +261,12 @@
   "contentPlaceholder": "أكتب المحتوى هنا ...",
   "createPage":"إنشاء صفحة",
   "editPage": "تعديل الصفحة",
-  "descriptionPlaceholder": "أكتب الوصف هنا ..."
+  "descriptionPlaceholder": "أكتب الوصف هنا ...",
+  "availableColors": "الالوان المتاحة",
+  "seo": {
+    "dashboard": {
+      "title": "لوحة التحكم | متجر الأزياء",
+      "description": "لوحة تحكم — إدارة المنتجات والمتغيرات والتصنيفات والطلبات بكل سهولة ويسر"
+    }
+}
 }

@@ -261,5 +261,12 @@
   "contentPlaceholder": "write the content here ...",
   "createPage": "Create page",
   "editPage": "Edit page",
-  "descriptionPlaceholder": "Write the description here ..."
+  "descriptionPlaceholder": "Write the description here ...",
+  "availableColors": "Available colors",
+  "seo": {
+    "dashboard": {
+      "title": "Dashboard",
+      "description": "Dashboard — Manage your products, variants, categories, and orders with ease"
+    }
+  }
 }

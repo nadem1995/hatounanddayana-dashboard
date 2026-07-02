@@ -34,7 +34,7 @@ useHead({
 })
 
 const title = computed(() => t('appName'))
-const description = computed(() => t('appDescription'))
+const description = computed(() => t('seo.dashboard.description'))
 
 useSeoMeta({
   title,
