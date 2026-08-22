@@ -12,7 +12,7 @@
         <NuxtImg
           width="80"
           height="80"
-          src="/logo2.png"
+          src="/logo1.png"
           alt="logo"
           loading="lazy"
         />
