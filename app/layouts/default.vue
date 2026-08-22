@@ -8,7 +8,15 @@
       class="bg-elevated/25"
       :ui="{ footer: 'lg:border-t lg:border-default' }"
     >
-      <template #header="{ collapsed }"> logo </template>
+      <template #header="{ collapsed }">
+        <NuxtImg
+          width="80"
+          height="80"
+          src="/logo2.png"
+          alt="logo"
+          loading="lazy"
+        />
+      </template>
 
       <template #default="{ collapsed }">
         <UNavigationMenu
