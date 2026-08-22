@@ -83,20 +83,20 @@ const links = [
       defaultOpen: true,
       type: "trigger",
       children: [
-        {
+       /* {
           label: computed(() => t("testimonials")),
           to: { name: "admin-cms-testimonials" },
           onSelect: () => {
             open.value = false;
           },
-        },
-        {
+        },*/
+       /* {
           label: computed(() => t("FAQ")),
           to: { name: "admin-cms-F&Q" },
           onSelect: () => {
             open.value = false;
           },
-        },
+        },*/
         {
           label: computed(() => t("heroImage")),
           to: { name: "admin-cms-hero-image" },
