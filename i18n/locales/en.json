@@ -268,5 +268,6 @@
       "title": "Dashboard",
       "description": "Dashboard — Manage your products, variants, categories, and orders with ease"
     }
-  }
+  },
+  "sizes": "Sizes"
 }

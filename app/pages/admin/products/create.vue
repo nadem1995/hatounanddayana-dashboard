@@ -28,6 +28,7 @@
           <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <div class="space-y-6">
               <ProductsStatusForm :state="state" />
+              <ProductsSizesForm :state="state" />
               <ProductsCategoriesForm
                 :state="state"
                 :categories="data?.data?.categories"
@@ -89,6 +90,7 @@ const state = ref({
   price: 0,
   status: false,
   is_best_seller: false,
+  sizes:[],
   variants: [
     {
       color_name_en: "",
