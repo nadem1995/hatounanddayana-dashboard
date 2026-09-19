@@ -34,6 +34,7 @@
                 :loading="pending"
                 :server-error="serverError"
               />
+              <ProductsSizesForm :state="state" />
               <ProductsPriceForm :state="state" :server-error="serverError" />
             </div>
 
@@ -92,6 +93,7 @@ const state = ref({
   status: false,
   variants: [],
   categories: [],
+  sizes:[]
 });
 
 const serverError = ref(null);
@@ -119,6 +121,7 @@ function mapProductToState(productData) {
       _deleted_images: [],
     })),
     categories: productData.product.categories.map((cat) => cat.id),
+    sizes:productData.product.sizes
   };
 }
 
@@ -142,7 +145,12 @@ async function onSubmit() {
     formData.append("description_ar", state.value.description_ar);
     formData.append("description_en", state.value.description_en);
     formData.append("price", state.value.price);
+    formData.append("sizes", state.value.sizes);
     formData.append("status", state.value.status ? "1" : "0");
+
+    state.value.sizes.forEach((size, index) => {
+      formData.append(`sizes[${index}]`, size);
+    });
 
     state.value.categories.forEach((categoryId, index) => {
       formData.append(`categories[${index}]`, categoryId);

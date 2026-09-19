@@ -38,6 +38,8 @@
             <ProductsPriceCard :product="product"/>
             <!-- Categories Card -->
             <ProductsCategoriesCard :categories="product.data.categories"/>
+            <!-- Sizes Card -->
+            <SizesCard v-if="product.data.sizes" :sizes="product.data.sizes"/>
             <!-- Timestamps Card -->
             <Timestamps
               :created-at="product.data.created_at"

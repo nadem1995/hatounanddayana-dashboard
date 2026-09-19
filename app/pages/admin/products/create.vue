@@ -45,7 +45,6 @@
                 :state="state"
                 :server-error="serverError"
               />
-
               <ProductsVariantsForm :state="state" />
             </div>
           </div>
